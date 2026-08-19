@@ -44,12 +44,13 @@ export function Browse() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">Browse games</h1>
-          <p className="mt-1 text-slate-400">
+          <p className="kicker">The floor</p>
+          <h1 className="display mt-2 text-4xl sm:text-5xl">Browse cabinets</h1>
+          <p className="mt-2 text-mute">
             {loading
-              ? 'Loading…'
+              ? 'Checking the floor…'
               : `${sorted.length} game${sorted.length === 1 ? '' : 's'} ready to play`}
           </p>
         </div>
@@ -58,14 +59,14 @@ export function Browse() {
           <div className="relative">
             <svg
               viewBox="0 0 24 24"
-              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 fill-slate-500"
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 fill-mute"
             >
               <path d="M10 2a8 8 0 105.3 14l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z" />
             </svg>
             <input
               value={search}
               onChange={(e) => setParam('q', e.target.value)}
-              placeholder="Search games…"
+              placeholder="Search the floor…"
               className="input pl-9 sm:w-64"
             />
           </div>
@@ -81,17 +82,16 @@ export function Browse() {
         </div>
       </div>
 
-      {/* Category strip */}
       <div className="no-scrollbar -mx-4 mb-8 flex gap-2 overflow-x-auto px-4 pb-1">
         {(['All', ...GAME_CATEGORIES] as CategoryFilter[]).map((c) => (
           <button
             key={c}
             onClick={() => setParam('category', c === 'All' ? '' : c)}
             className={
-              'shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition ' +
+              'shrink-0 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.16em] transition ' +
               (category === c
-                ? 'bg-gradient-to-br from-brand-500 to-purple-600 text-white'
-                : 'bg-white/5 text-slate-300 ring-1 ring-white/10 hover:bg-white/10')
+                ? 'bg-ember text-ink'
+                : 'border-2 border-line text-mute hover:border-paper/30 hover:text-paper')
             }
           >
             {c}
@@ -100,19 +100,18 @@ export function Browse() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="aspect-video animate-pulse rounded-2xl bg-slate-800/50 ring-1 ring-white/10"
-            />
+            <div key={i} className="aspect-[4/5] animate-pulse bg-paper p-[5px]">
+              <div className="h-full bg-ink/10" />
+            </div>
           ))}
         </div>
       ) : sorted.length === 0 ? (
-        <div className="grid place-items-center rounded-2xl border border-dashed border-white/10 py-24 text-center">
-          <div className="text-5xl">🕹️</div>
-          <h3 className="mt-4 text-lg font-semibold text-white">No games found</h3>
-          <p className="mt-1 text-sm text-slate-400">
+        <div className="grid place-items-center border-2 border-dashed border-line py-24 text-center">
+          <p className="kicker">Empty row</p>
+          <h3 className="display mt-3 text-2xl">Nothing on that aisle</h3>
+          <p className="mt-2 text-sm text-mute">
             Try a different category or search term.
           </p>
         </div>

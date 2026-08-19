@@ -35,7 +35,7 @@ export function Dashboard() {
   if (loading) {
     return (
       <div className="grid min-h-[60vh] place-items-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-brand-400" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-line border-t-acid" />
       </div>
     )
   }
@@ -50,59 +50,57 @@ export function Dashboard() {
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-          <p className="mt-1 text-slate-400">
-            Welcome back, {profile?.display_name ?? profile?.username ?? 'dev'}.
-          </p>
+          <p className="kicker">Developer desk</p>
+          <h1 className="display mt-2 text-4xl">
+            {profile?.display_name ?? profile?.username ?? 'dev'}
+          </h1>
+          <p className="mt-2 text-mute">Cabinets you put on the floor.</p>
         </div>
         <Link to="/upload" className="btn-primary">
-          + Upload new game
+          + New cabinet
         </Link>
       </div>
 
-      {/* Stats */}
-      <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard label="Total games" value={String(games.length)} hint={`${approved} live`} />
-        <StatCard label="Total plays" value={formatPlayCount(totalPlays)} hint="all time" />
+      <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <StatCard label="Cabinets" value={String(games.length)} hint={`${approved} live`} />
+        <StatCard label="Plays" value={formatPlayCount(totalPlays)} hint="all time" />
         <StatCard
-          label="Storage used"
+          label="Storage"
           value={`${storageUsed} MB`}
           hint={`of ${storageMax} MB`}
         />
         <StatCard
-          label="Quota slots"
+          label="Slots"
           value={`${games.length} / ${quota?.max_games ?? 10}`}
-          hint="games published"
+          hint="published"
         />
       </div>
 
-      {/* Storage bar */}
       <div className="card mb-8">
-        <div className="mb-2 flex items-center justify-between text-sm">
-          <span className="font-medium text-white">Storage quota</span>
-          <span className="text-slate-400">
+        <div className="mb-2 flex items-center justify-between">
+          <span className="kicker">Storage quota</span>
+          <span className="font-mono text-[11px] text-mute">
             {storageUsed} / {storageMax} MB
           </span>
         </div>
-        <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-700">
+        <div className="h-2 w-full overflow-hidden bg-ink">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-brand-500 to-purple-500 transition-all"
+            className="h-full bg-ember transition-all"
             style={{ width: `${storagePct}%` }}
           />
         </div>
       </div>
 
-      {/* Games table */}
-      <div className="overflow-hidden rounded-2xl bg-slate-800/60 ring-1 ring-white/10">
-        <div className="border-b border-white/10 px-5 py-4">
-          <h2 className="font-semibold text-white">Your games</h2>
+      <div className="overflow-hidden border-2 border-line bg-panel">
+        <div className="border-b-2 border-line px-5 py-4">
+          <h2 className="font-display text-xl font-extrabold text-paper">Your games</h2>
         </div>
         {games.length === 0 ? (
           <div className="grid place-items-center px-5 py-16 text-center">
-            <div className="text-4xl">📦</div>
-            <h3 className="mt-3 font-semibold text-white">No games yet</h3>
-            <p className="mt-1 text-sm text-slate-400">
-              Upload your first HTML5 game to get started.
+            <p className="kicker">Empty desk</p>
+            <h3 className="display mt-3 text-2xl">No cabinets yet</h3>
+            <p className="mt-2 text-sm text-mute">
+              Upload an HTML5 ZIP to put something on the floor.
             </p>
             <Link to="/upload" className="btn-primary mt-5">
               Upload a game
@@ -111,7 +109,7 @@ export function Dashboard() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="text-xs uppercase tracking-wide text-slate-500">
+              <thead className="font-mono text-[10px] uppercase tracking-[0.16em] text-mute">
                 <tr>
                   <th className="px-5 py-3">Game</th>
                   <th className="px-5 py-3">Status</th>
@@ -119,27 +117,27 @@ export function Dashboard() {
                   <th className="px-5 py-3">Added</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-line">
                 {games.map((g) => (
-                  <tr key={g.id} className="hover:bg-white/5">
+                  <tr key={g.id} className="hover:bg-white/[0.03]">
                     <td className="px-5 py-3">
                       <Link
                         to={`/game/${g.slug}`}
-                        className="font-medium text-white hover:text-brand-300"
+                        className="font-display font-bold text-paper hover:text-ember"
                       >
                         {g.title}
                       </Link>
-                      <div className="text-xs text-slate-500">
+                      <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-mute">
                         {g.category ?? 'Uncategorized'}
                       </div>
                     </td>
                     <td className="px-5 py-3">
                       <StatusBadge status={g.status} />
                     </td>
-                    <td className="px-5 py-3 text-slate-300">
+                    <td className="px-5 py-3 font-mono text-paper/80">
                       {formatPlayCount(g.play_count)}
                     </td>
-                    <td className="px-5 py-3 text-slate-400">
+                    <td className="px-5 py-3 font-mono text-[11px] text-mute">
                       {relativeTime(g.created_at)}
                     </td>
                   </tr>
@@ -163,27 +161,25 @@ function StatCard({
   hint: string
 }) {
   return (
-    <div className="card">
-      <div className="text-xs uppercase tracking-wide text-slate-500">{label}</div>
-      <div className="mt-1 text-2xl font-bold text-white">{value}</div>
-      <div className="mt-1 text-xs text-slate-400">{hint}</div>
+    <div className="card !p-4">
+      <div className="kicker">{label}</div>
+      <div className="mt-2 font-display text-2xl font-extrabold text-paper">{value}</div>
+      <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-mute">
+        {hint}
+      </div>
     </div>
   )
 }
 
 function StatusBadge({ status }: { status: PlayableGame['status'] }) {
   const map = {
-    approved: 'bg-emerald-500/15 text-emerald-300 ring-emerald-500/30',
-    pending: 'bg-amber-500/15 text-amber-300 ring-amber-500/30',
-    rejected: 'bg-rose-500/15 text-rose-300 ring-rose-500/30',
+    approved: 'bg-acid text-ink',
+    pending: 'bg-paper text-ink',
+    rejected: 'bg-ember text-ink',
   }
   return (
-    <span className={`badge ring-1 ${map[status]}`}>
-      {status === 'approved'
-        ? 'Live'
-        : status === 'pending'
-          ? 'In review'
-          : 'Rejected'}
+    <span className={`badge ${map[status]}`}>
+      {status === 'approved' ? 'Live' : status === 'pending' ? 'In review' : 'Rejected'}
     </span>
   )
 }

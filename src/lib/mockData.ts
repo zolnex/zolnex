@@ -14,7 +14,6 @@ interface MockGameSeed {
   description: string
   miniGameId: keyof typeof MINI_GAMES
   developer: string
-  hue: number
   playCount: number
   featured?: boolean
 }
@@ -26,10 +25,9 @@ const SEED: MockGameSeed[] = [
     slug: 'neon-breaker',
     category: 'Arcade',
     description:
-      'A modern twist on the classic brick-breaker. Smash through glowing neon bricks, keep the ball alive, and chase a high score.',
+      'Paddle, ball, a wall of printed bricks. Keep it in play long enough to clear the cabinet.',
     miniGameId: 'breaker',
     developer: 'PixelForge',
-    hue: 210,
     playCount: 48213,
     featured: true,
   },
@@ -39,10 +37,9 @@ const SEED: MockGameSeed[] = [
     slug: 'grid-master-2048',
     category: 'Puzzle',
     description:
-      'Slide and merge numbered tiles to reach 2048 — and beyond. Simple to learn, fiendishly hard to master.',
+      'Slide the tiles. Double them. 2048 is the excuse — the board is the game.',
     miniGameId: 'g2048',
     developer: 'MindBend Studios',
-    hue: 270,
     playCount: 31980,
     featured: true,
   },
@@ -52,10 +49,9 @@ const SEED: MockGameSeed[] = [
     slug: 'snake-pulse',
     category: 'Arcade',
     description:
-      'The timeless snake game, reborn. Eat, grow, and don’t bite your own tail. How long can you get?',
+      'Eat, grow, don’t meet yourself. The grid is small. You will not stay small.',
     miniGameId: 'snake',
     developer: 'RetroByte',
-    hue: 150,
     playCount: 27654,
   },
   {
@@ -64,10 +60,9 @@ const SEED: MockGameSeed[] = [
     slug: 'memory-match',
     category: 'Puzzle',
     description:
-      'Flip the cards, find the pairs, and clear the board in as few moves as possible. Great for a quick brain warm-up.',
+      'Flip two. Remember where they lived. Clear the table in as few mistakes as you can stand.',
     miniGameId: 'memory',
     developer: 'Lumi Games',
-    hue: 330,
     playCount: 19432,
   },
   {
@@ -76,10 +71,9 @@ const SEED: MockGameSeed[] = [
     slug: 'tic-tactics',
     category: 'Strategy',
     description:
-      'Classic tic-tac-toe against an unbeatable minimax AI. Can you force a draw — or even sneak out a win?',
+      'Noughts and crosses against a minimax that does not get bored. A draw is a respectable night.',
     miniGameId: 'tic',
     developer: 'DeepPlay',
-    hue: 30,
     playCount: 14210,
     featured: true,
   },
@@ -89,10 +83,9 @@ const SEED: MockGameSeed[] = [
     slug: 'reflex-rush',
     category: 'Casual',
     description:
-      'Test your reaction speed. Wait for green, then click as fast as humanly possible. Beat your personal best.',
+      'Wait for green. Click. The clock is meaner than it looks.',
     miniGameId: 'reaction',
     developer: 'QuickFingers',
-    hue: 100,
     playCount: 9870,
   },
 ]
@@ -134,19 +127,16 @@ export function getMiniGameBlobUrl(miniGameId: keyof typeof MINI_GAMES): string 
 }
 
 export function mockCoverUrl(game: Game): string {
-  const hue = SEED.find((s) => s.id === game.id)?.hue ?? 220
+  const seed = SEED.find((s) => s.id === game.id)
+  if (seed) return `${import.meta.env.BASE_URL}covers/${seed.slug}.jpg`
   const title = encodeURIComponent(game.title)
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="270" viewBox="0 0 480 270">
-    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="hsl(${hue},70%,22%)"/>
-      <stop offset="1" stop-color="hsl(${(hue + 40) % 360},80%,45%)"/>
-    </linearGradient></defs>
-    <rect width="480" height="270" fill="url(#g)"/>
-    <g fill="#ffffff" opacity="0.95" font-family="Inter,Arial,sans-serif">
-      <text x="32" y="150" font-size="40" font-weight="800">${title}</text>
-    </g>
-    <circle cx="410" cy="60" r="50" fill="#ffffff" opacity="0.12"/>
-    <circle cx="70" cy="230" r="80" fill="#ffffff" opacity="0.08"/>
+    <rect width="480" height="270" fill="#100e0c"/>
+    <rect x="16" y="16" width="448" height="238" fill="#f3ead8"/>
+    <rect x="28" y="28" width="424" height="214" fill="#1a1613"/>
+    <circle cx="400" cy="70" r="36" fill="#ff4d1c"/>
+    <rect x="48" y="188" width="120" height="18" fill="#d8f04a"/>
+    <text x="48" y="160" fill="#f3ead8" font-size="28" font-weight="800" font-family="Georgia,serif">${title}</text>
   </svg>`
   return `data:image/svg+xml;utf8,${svg}`
 }

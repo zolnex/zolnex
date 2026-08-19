@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { GameCard } from '../components/games/GameCard'
-import { fetchFeatured } from '../lib/games'
+import { fetchFeatured, formatPlayCount } from '../lib/games'
 import { GAME_CATEGORIES } from '../types'
 import type { PlayableGame } from '../types'
 
@@ -15,62 +15,105 @@ export function Home() {
       .finally(() => setLoading(false))
   }, [])
 
+  const pick = featured[0]
+  const rest = featured.slice(1)
+  const totalPlays = featured.reduce((s, g) => s + g.play_count, 0)
+
   return (
-    <div>
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-24 left-1/4 h-72 w-72 rounded-full bg-brand-600/30 blur-3xl" />
-          <div className="absolute -right-24 top-10 h-72 w-72 rounded-full bg-purple-600/20 blur-3xl" />
-        </div>
-        <div className="relative mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 sm:py-28">
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-1.5 text-xs font-medium text-brand-200 ring-1 ring-white/10">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-            Instant play · no downloads · no installs
-          </span>
-          <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-6xl">
-            Play HTML5 games{' '}
-            <span className="bg-gradient-to-r from-brand-400 to-purple-400 bg-clip-text text-transparent">
-              instantly
-            </span>
-            , right in your browser.
-          </h1>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-slate-400">
-            A home for indie developers and players. Browse, click, and play —
-            no accounts required.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link to="/browse" className="btn-primary">
-              <svg viewBox="0 0 24 24" className="h-4 w-4 fill-white">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-              Start playing
-            </Link>
-            <Link to="/upload" className="btn-ghost">
-              Publish your game
-            </Link>
+    <div className="animate-fade-in">
+      <section className="mx-auto max-w-7xl px-4 pb-6 pt-10 sm:px-6 sm:pt-16">
+        <div className="grid items-end gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <p className="kicker">
+              <span className="mr-2 inline-block h-1.5 w-1.5 animate-blink bg-ember align-middle" />
+              Open late · HTML5 · no downloads
+            </p>
+            <h1 className="display mt-4 max-w-[14ch] text-5xl leading-[0.92] sm:text-7xl">
+              Tonight the arcade lives in your tab.
+            </h1>
+            <p className="mt-6 max-w-md text-base leading-relaxed text-mute sm:text-lg">
+              Games from small studios, played where you already are. Click a
+              cabinet. No installer, no account, no storefront queue.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link to="/browse" className="btn-primary">
+                Browse the floor
+              </Link>
+              <Link to="/upload" className="btn-ghost">
+                Drop a ZIP
+              </Link>
+            </div>
+            <dl className="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[11px] uppercase tracking-[0.16em] text-mute">
+              <div>
+                <dt className="sr-only">Plays</dt>
+                <dd>
+                  <span className="text-paper">
+                    {loading ? '—' : formatPlayCount(totalPlays)}
+                  </span>{' '}
+                  plays on the floor
+                </dd>
+              </div>
+              <div>
+                <dt className="sr-only">Cabinets</dt>
+                <dd>
+                  <span className="text-paper">
+                    {loading ? '—' : featured.length}
+                  </span>{' '}
+                  cabinets warm
+                </dd>
+              </div>
+            </dl>
           </div>
 
-          <div className="mx-auto mt-12 grid max-w-lg grid-cols-3 gap-4 text-center">
-            <Stat value="100%" label="Browser-based" />
-            <Stat value="0" label="Downloads needed" />
-            <Stat value="∞" label="Indie games" />
+          <div className="lg:col-span-5">
+            {loading || !pick ? (
+              <div className="aspect-[4/5] animate-pulse bg-panel sm:aspect-[5/4]" />
+            ) : (
+              <Link to={`/game/${pick.slug}`} className="group block">
+                <div className="relative bg-paper p-2 shadow-stamp transition group-hover:-translate-x-px group-hover:-translate-y-px group-hover:shadow-stamp-ember">
+                  <div className="relative aspect-[5/4] overflow-hidden bg-ink">
+                    {pick.coverUrl && (
+                      <img
+                        src={pick.coverUrl}
+                        alt=""
+                        className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
+                      />
+                    )}
+                    <span className="absolute left-3 top-3 bg-acid px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink">
+                      Now playing
+                    </span>
+                  </div>
+                  <div className="flex items-end justify-between gap-4 bg-paper px-3 py-3">
+                    <div>
+                      <div className="font-display text-2xl font-extrabold leading-none text-ink">
+                        {pick.title}
+                      </div>
+                      <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink/55">
+                        {pick.developer?.display_name} · {pick.category}
+                      </div>
+                    </div>
+                    <span className="shrink-0 bg-ink px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-paper">
+                      Play →
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Featured games */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mb-6 flex items-end justify-between">
+      <CategoryTicker />
+
+      <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6">
+        <div className="mb-7 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-white">Featured games</h2>
-            <p className="text-sm text-slate-400">
-              Hand-picked titles to jump into right now.
-            </p>
+            <p className="kicker">On the floor</p>
+            <h2 className="display mt-2 text-3xl sm:text-4xl">Tonight’s cabinets</h2>
           </div>
           <Link
             to="/browse"
-            className="text-sm font-medium text-brand-400 hover:text-brand-300"
+            className="font-mono text-[11px] uppercase tracking-[0.16em] text-mute hover:text-paper"
           >
             View all →
           </Link>
@@ -80,50 +123,61 @@ export function Home() {
           <SkeletonGrid />
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((g) => (
-              <GameCard key={g.id} game={g} />
-            ))}
+            {rest.length > 0 ? (
+              <>
+                <GameCard key={rest[0].id} game={rest[0]} featured />
+                {rest.slice(1).map((g) => (
+                  <GameCard key={g.id} game={g} />
+                ))}
+              </>
+            ) : (
+              featured.map((g) => <GameCard key={g.id} game={g} />)
+            )}
           </div>
         )}
       </section>
 
-      {/* Categories */}
-      <section className="mx-auto mt-16 max-w-7xl px-4 sm:px-6">
-        <h2 className="mb-6 text-2xl font-bold text-white">Browse by category</h2>
-        <div className="flex flex-wrap gap-2">
-          {GAME_CATEGORIES.map((c) => (
-            <Link
-              key={c}
-              to={`/browse?category=${encodeURIComponent(c)}`}
-              className="rounded-full bg-white/5 px-4 py-2 text-sm font-medium text-slate-300 ring-1 ring-white/10 transition hover:bg-brand-500/20 hover:text-white"
-            >
-              {c}
-            </Link>
-          ))}
-        </div>
+      <section className="mx-auto mt-20 max-w-7xl px-4 sm:px-6">
+        <p className="kicker">How the floor works</p>
+        <h2 className="display mt-2 max-w-xl text-3xl sm:text-4xl">
+          Three steps. Then you’re in.
+        </h2>
+        <ol className="mt-8 grid gap-4 sm:grid-cols-3">
+          <Step n="01" title="Pick a cabinet">
+            Browse by mood — arcade, puzzle, something meaner. Every title
+            runs in the page.
+          </Step>
+          <Step n="02" title="Play in the tab">
+            Fullscreen if you want it. No client, no launcher, no “add to
+            library.”
+          </Step>
+          <Step n="03" title="Or ship a ZIP">
+            Sign in with GitHub, drop an <code className="text-acid">index.html</code>{' '}
+            archive, and it goes on the floor.
+          </Step>
+        </ol>
       </section>
 
-      {/* Developer CTA */}
       <section className="mx-auto mt-20 max-w-7xl px-4 sm:px-6">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-800 to-slate-900 p-8 ring-1 ring-white/10 sm:p-12">
-          <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full bg-brand-500/20 blur-2xl" />
-          <div className="relative max-w-xl">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">
-              Are you a game developer?
-            </h2>
-            <p className="mt-3 text-slate-400">
-              Sign in with GitHub, drop your HTML5 game as a ZIP, and reach
-              players in seconds. We handle hosting, analytics, and player
-              counts — you focus on building.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link to="/upload" className="btn-primary">
-                Upload a game
-              </Link>
-              <Link to="/dashboard" className="btn-ghost">
-                Open dashboard
-              </Link>
-            </div>
+        <div className="relative overflow-hidden border-2 border-line bg-raised p-8 sm:p-12">
+          <div className="pointer-events-none absolute -right-8 top-0 font-display text-[9rem] leading-none text-paper/[0.04]">
+            ZIP
+          </div>
+          <p className="kicker">For developers</p>
+          <h2 className="display relative mt-3 max-w-xl text-3xl sm:text-4xl">
+            Ship a ZIP. We put it on the floor.
+          </h2>
+          <p className="relative mt-4 max-w-lg text-mute">
+            Hosting, play counts, and a public cabinet. You keep the build.
+            Players hit play the same minute you upload.
+          </p>
+          <div className="relative mt-7 flex flex-wrap gap-3">
+            <Link to="/upload" className="btn-primary">
+              Upload a game
+            </Link>
+            <Link to="/dashboard" className="btn-ghost">
+              Open the desk
+            </Link>
           </div>
         </div>
       </section>
@@ -131,30 +185,60 @@ export function Home() {
   )
 }
 
-function Stat({ value, label }: { value: string; label: string }) {
+function CategoryTicker() {
+  const items = [...GAME_CATEGORIES, ...GAME_CATEGORIES]
   return (
-    <div className="rounded-xl bg-white/5 px-3 py-4 ring-1 ring-white/10">
-      <div className="text-2xl font-extrabold text-white">{value}</div>
-      <div className="mt-1 text-xs text-slate-400">{label}</div>
+    <div className="mt-14 overflow-hidden border-y-2 border-line bg-raised">
+      <div className="flex w-max animate-marquee gap-0 hover:[animation-play-state:paused]">
+        {items.map((c, i) => (
+          <Link
+            key={`${c}-${i}`}
+            to={`/browse?category=${encodeURIComponent(c)}`}
+            className="shrink-0 border-r-2 border-line px-6 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-mute transition hover:bg-ember hover:text-ink"
+          >
+            {c}
+          </Link>
+        ))}
+      </div>
     </div>
+  )
+}
+
+function Step({
+  n,
+  title,
+  children,
+}: {
+  n: string
+  title: string
+  children: ReactNode
+}) {
+  return (
+    <li className="card">
+      <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-ember">{n}</div>
+      <h3 className="mt-3 font-display text-xl font-extrabold text-paper">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-mute">{children}</p>
+    </li>
   )
 }
 
 function SkeletonGrid() {
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {Array.from({ length: 6 }).map((_, i) => (
+      {Array.from({ length: 5 }).map((_, i) => (
         <div
           key={i}
-          className="overflow-hidden rounded-2xl bg-slate-800/40 ring-1 ring-white/10"
+          className={
+            'overflow-hidden bg-paper p-[5px] ' +
+            (i === 0 ? 'sm:col-span-2 sm:row-span-2' : '')
+          }
         >
-          <div className="relative aspect-video overflow-hidden bg-slate-800">
-            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+          <div className="relative aspect-video overflow-hidden bg-ink/10">
+            <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-ink/10 to-transparent" />
           </div>
-          <div className="space-y-3 p-4">
-            <div className="h-4 w-2/3 rounded bg-slate-700/60" />
-            <div className="h-3 w-full rounded bg-slate-700/40" />
-            <div className="h-3 w-1/2 rounded bg-slate-700/40" />
+          <div className="space-y-2 p-3">
+            <div className="h-5 w-2/3 bg-ink/10" />
+            <div className="h-3 w-1/2 bg-ink/10" />
           </div>
         </div>
       ))}

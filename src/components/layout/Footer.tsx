@@ -1,67 +1,77 @@
 import { Link } from 'react-router-dom'
+import { Logo } from '../brand/Logo'
 
 export function Footer() {
   return (
-    <footer className="mt-20 border-t border-white/10 bg-slate-950">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-4">
-        <div className="md:col-span-2">
-          <div className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-purple-600 text-white">
-              <svg viewBox="0 0 24 24" className="h-4 w-4 fill-white">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </span>
-            <span className="text-lg font-extrabold text-white">
-              Insta<span className="text-brand-400">Play</span>
-            </span>
-          </div>
-          <p className="mt-3 max-w-sm text-sm text-slate-400">
-            Play HTML5 games instantly in your browser. No downloads, no
-            installs — just hit play.
+    <footer className="mt-24 border-t-2 border-line bg-ink">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-12">
+        <div className="md:col-span-6">
+          <Logo />
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-mute">
+            An HTML5 arcade that lives in the tab. Small studios drop a ZIP;
+            players click in. No launchers, no installers, no waiting on a
+            storefront review to take a turn.
           </p>
         </div>
 
-        <div>
-          <h4 className="text-sm font-semibold text-white">Explore</h4>
-          <ul className="mt-3 space-y-2 text-sm text-slate-400">
+        <div className="md:col-span-3">
+          <h4 className="kicker">On the floor</h4>
+          <ul className="mt-3 space-y-2 text-sm text-mute">
             <li>
-              <Link to="/browse" className="hover:text-white">
-                Browse games
+              <Link to="/browse" className="hover:text-paper">
+                All cabinets
               </Link>
             </li>
             <li>
-              <Link to="/browse?category=Arcade" className="hover:text-white">
+              <Link to="/browse?category=Arcade" className="hover:text-paper">
                 Arcade
               </Link>
             </li>
             <li>
-              <Link to="/browse?category=Puzzle" className="hover:text-white">
+              <Link to="/browse?category=Puzzle" className="hover:text-paper">
                 Puzzle
+              </Link>
+            </li>
+            <li>
+              <Link to="/browse?sort=popular" className="hover:text-paper">
+                Most played
               </Link>
             </li>
           </ul>
         </div>
 
-        <div>
-          <h4 className="text-sm font-semibold text-white">For developers</h4>
-          <ul className="mt-3 space-y-2 text-sm text-slate-400">
+        <div className="md:col-span-3">
+          <h4 className="kicker">For makers</h4>
+          <ul className="mt-3 space-y-2 text-sm text-mute">
             <li>
-              <Link to="/dashboard" className="hover:text-white">
-                Dashboard
+              <Link to="/dashboard" className="hover:text-paper">
+                Developer desk
               </Link>
             </li>
             <li>
-              <Link to="/upload" className="hover:text-white">
-                Upload a game
+              <Link to="/upload" className="hover:text-paper">
+                Drop a ZIP
               </Link>
+            </li>
+            <li>
+              <a
+                href="https://github.com/zolnex/zolnex.github.io"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-paper"
+              >
+                Source
+              </a>
             </li>
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-white/5 py-6 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} zolnex · Built with React, Vite &
-        Supabase · Hosted on GitHub Pages
+      <div className="border-t-2 border-line">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-5 font-mono text-[11px] uppercase tracking-[0.16em] text-mute sm:px-6">
+          <span>© {new Date().getFullYear()} zolnex</span>
+          <span>Browser cabinets · GitHub Pages</span>
+        </div>
       </div>
     </footer>
   )

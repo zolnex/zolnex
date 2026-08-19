@@ -5,7 +5,7 @@ import { DemoBanner } from '../DemoBanner'
 
 export function Layout() {
   return (
-    <div className="flex min-h-screen flex-col bg-slate-900">
+    <div className="relative flex min-h-screen flex-col bg-ink">
       <Header />
       <DemoBanner />
       <main className="flex-1">
