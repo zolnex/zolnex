@@ -4,34 +4,57 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+        ink: '#100e0c',
+        panel: '#1a1613',
+        raised: '#231e19',
+        line: '#3a322b',
+        paper: '#f3ead8',
+        mute: '#a89882',
+        ember: {
+          DEFAULT: '#ff4d1c',
+          dim: '#c93612',
+          glow: '#ff7a4d',
         },
+        acid: '#d8f04a',
+        teal: '#3aa8a0',
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: [
+          '"Bricolage Grotesque"',
+          'ui-sans-serif',
+          'system-ui',
+          'sans-serif',
+        ],
+        sans: ['Figtree', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+      },
+      boxShadow: {
+        stamp: '3px 3px 0 0 #100e0c',
+        'stamp-ember': '3px 3px 0 0 #ff4d1c',
+        'stamp-acid': '3px 3px 0 0 #d8f04a',
       },
       keyframes: {
         'fade-in': {
-          '0%': { opacity: '0', transform: 'translateY(8px)' },
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         shimmer: {
           '100%': { transform: 'translateX(100%)' },
         },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        blink: {
+          '0%, 45%': { opacity: '1' },
+          '50%, 100%': { opacity: '0.25' },
+        },
       },
       animation: {
-        'fade-in': 'fade-in 0.4s ease-out',
+        'fade-in': 'fade-in 0.45s ease-out',
         shimmer: 'shimmer 1.5s infinite',
+        marquee: 'marquee 28s linear infinite',
+        blink: 'blink 1.6s steps(1) infinite',
       },
     },
   },

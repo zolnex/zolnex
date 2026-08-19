@@ -168,21 +168,23 @@ export function Upload() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-      <h1 className="text-3xl font-bold text-white">Upload a game</h1>
-      <p className="mt-1 text-slate-400">
-        Drop a ZIP containing your HTML5 game. Must include an{' '}
-        <code className="text-brand-300">index.html</code>.
+      <p className="kicker">Shipping dock</p>
+      <h1 className="display mt-2 text-4xl">Drop a ZIP</h1>
+      <p className="mt-2 text-mute">
+        Archive of your HTML5 game. Must include an{' '}
+        <code className="text-acid">index.html</code> at the root (or one folder
+        deep).
       </p>
 
       {isDemo && (
-        <div className="mt-4 rounded-xl bg-amber-500/10 p-4 text-sm text-amber-200 ring-1 ring-amber-500/20">
-          Demo mode: uploads are simulated locally so you can preview the full
-          flow. Connect Supabase to persist real games.
+        <div className="mt-5 border-2 border-acid/40 bg-acid/10 p-4 text-sm text-paper">
+          Demo cabinet: the upload is simulated locally so you can walk the
+          whole flow. Connect Supabase to persist real games.
         </div>
       )}
 
       {error && (
-        <div className="mt-4 rounded-xl bg-rose-500/10 p-4 text-sm text-rose-200 ring-1 ring-rose-500/20">
+        <div className="mt-5 border-2 border-ember bg-ember/10 p-4 text-sm text-paper">
           {error}
         </div>
       )}
@@ -202,10 +204,10 @@ export function Upload() {
           }}
           onClick={() => fileInput.current?.click()}
           className={
-            'flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-10 text-center transition ' +
+            'flex cursor-pointer flex-col items-center justify-center border-2 border-dashed px-6 py-12 text-center transition ' +
             (dragOver
-              ? 'border-brand-400 bg-brand-500/10'
-              : 'border-white/15 bg-slate-800/40 hover:border-white/30')
+              ? 'border-ember bg-ember/10'
+              : 'border-line bg-panel hover:border-paper/30')
           }
         >
           <input
@@ -215,20 +217,22 @@ export function Upload() {
             className="hidden"
             onChange={(e) => handleFiles(e.target.files)}
           />
-          <div className="text-4xl">📦</div>
+          <span className="badge bg-ember text-ink">ZIP</span>
           {zipFile ? (
-            <div className="mt-3">
-              <div className="font-semibold text-white">{zipFile.name}</div>
-              <div className="text-sm text-slate-400">
+            <div className="mt-4">
+              <div className="font-display text-xl font-extrabold text-paper">
+                {zipFile.name}
+              </div>
+              <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-mute">
                 {formatBytes(zipFile.size)} · click to replace
               </div>
             </div>
           ) : (
-            <div className="mt-3">
-              <div className="font-semibold text-white">
-                Drop your game ZIP here
+            <div className="mt-4">
+              <div className="font-display text-xl font-extrabold text-paper">
+                Drop the archive here
               </div>
-              <div className="text-sm text-slate-400">
+              <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-mute">
                 or click to browse · max {MAX_UPLOAD_MB}MB
               </div>
             </div>
@@ -253,7 +257,7 @@ export function Upload() {
               onChange={(e) => setSlug(slugify(e.target.value))}
               placeholder="my-awesome-game"
             />
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 font-mono text-[11px] text-mute">
               /game/{slug || 'my-awesome-game'}
             </p>
           </div>
@@ -291,10 +295,10 @@ export function Upload() {
               type="file"
               accept="image/*"
               onChange={(e) => setCoverFile(e.target.files?.[0] ?? null)}
-              className="block w-full text-sm text-slate-400 file:mr-3 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/20"
+              className="block w-full text-sm text-mute file:mr-3 file:border-2 file:border-line file:bg-raised file:px-3 file:py-2 file:text-sm file:font-semibold file:text-paper hover:file:border-paper/30"
             />
             {coverFile && (
-              <p className="mt-1 text-xs text-slate-500">{coverFile.name}</p>
+              <p className="mt-1 text-xs text-mute">{coverFile.name}</p>
             )}
           </div>
         </div>
@@ -314,16 +318,16 @@ export function Upload() {
 function ProgressView({ progress, text }: { progress: number; text: string }) {
   return (
     <div className="mx-auto max-w-md px-4 py-24 text-center">
-      <div className="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-white/10 border-t-brand-400" />
-      <h2 className="mt-6 text-xl font-bold text-white">Publishing your game</h2>
-      <p className="mt-1 text-sm text-slate-400">{text}</p>
-      <div className="mt-6 h-2 w-full overflow-hidden rounded-full bg-slate-700">
+      <div className="mx-auto h-14 w-14 animate-spin rounded-full border-2 border-line border-t-acid" />
+      <h2 className="display mt-6 text-2xl">Publishing your game</h2>
+      <p className="mt-2 text-sm text-mute">{text}</p>
+      <div className="mt-6 h-2 w-full overflow-hidden bg-line">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-brand-500 to-purple-500 transition-all"
+          className="h-full bg-ember transition-all"
           style={{ width: `${progress}%` }}
         />
       </div>
-      <div className="mt-2 text-xs text-slate-500">{progress}%</div>
+      <div className="mt-2 font-mono text-[11px] text-mute">{progress}%</div>
     </div>
   )
 }
@@ -341,14 +345,14 @@ function SuccessView({
 }) {
   return (
     <div className="mx-auto max-w-md px-4 py-24 text-center">
-      <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-500/15 text-3xl ring-1 ring-emerald-500/30">
-        ✅
+      <div className="mx-auto grid h-16 w-16 place-items-center bg-acid font-display text-2xl font-extrabold text-ink">
+        OK
       </div>
-      <h2 className="mt-6 text-2xl font-bold text-white">Game submitted!</h2>
-      <p className="mt-2 text-slate-400">
+      <h2 className="display mt-6 text-3xl">On the floor</h2>
+      <p className="mt-3 text-mute">
         {isDemo
-          ? 'Your game has been added to the demo library and is ready to play.'
-          : 'Your game is now pending admin review. We’ll publish it once approved.'}
+          ? 'Your game is in the demo library and ready to play.'
+          : 'Your game is pending review. We’ll publish it once it’s approved.'}
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         {isDemo && (

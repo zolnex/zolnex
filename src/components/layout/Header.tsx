@@ -1,6 +1,7 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { classNames } from '../../lib/utils'
+import { Logo } from '../brand/Logo'
 
 export function Header() {
   const { profile, signInWithGitHub, signOut, isDemo } = useAuth()
@@ -8,55 +9,45 @@ export function Header() {
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     classNames(
-      'px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-      isActive
-        ? 'text-white bg-white/10'
-        : 'text-slate-300 hover:text-white hover:bg-white/5',
+      'px-2.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.16em] transition',
+      isActive ? 'text-acid' : 'text-mute hover:text-paper',
     )
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-2 pr-2">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-purple-600 text-white shadow-lg shadow-brand-500/30">
-            <svg viewBox="0 0 24 24" className="h-5 w-5 fill-white">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </span>
-          <span className="text-lg font-extrabold tracking-tight text-white">
-            zol<span className="text-brand-400">nex</span>
-          </span>
-        </Link>
+    <header className="sticky top-0 z-40 border-b-2 border-line bg-ink/85 backdrop-blur-md">
+      <div className="mx-auto flex h-[4.25rem] max-w-7xl items-center gap-2 px-4 sm:px-6">
+        <Logo />
 
-        <nav className="ml-4 hidden items-center gap-1 sm:flex">
+        <nav className="ml-5 hidden items-center gap-1 sm:flex">
           <NavLink to="/" end className={linkClass}>
-            Home
+            Floor
           </NavLink>
           <NavLink to="/browse" className={linkClass}>
             Browse
           </NavLink>
           {profile && (
             <NavLink to="/dashboard" className={linkClass}>
-              Dashboard
+              Desk
             </NavLink>
           )}
         </nav>
 
         <div className="ml-auto flex items-center gap-3">
           {isDemo && (
-            <span className="hidden rounded-full bg-amber-500/15 px-3 py-1 text-xs font-semibold text-amber-300 ring-1 ring-amber-500/30 sm:inline">
-              Demo mode
+            <span className="hidden items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-acid sm:inline-flex">
+              <span className="h-1.5 w-1.5 animate-blink bg-acid" />
+              Demo cabinet
             </span>
           )}
 
           {profile ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <Link
                 to="/profile"
-                className="flex items-center gap-2 rounded-full bg-white/5 p-1 pr-3 ring-1 ring-white/10 transition hover:bg-white/10"
+                className="flex items-center gap-2 border-2 border-line bg-panel py-1 pl-1 pr-3 transition hover:border-paper/30"
               >
                 <Avatar profile={profile} />
-                <span className="hidden text-sm font-medium text-slate-200 sm:inline">
+                <span className="hidden font-mono text-[11px] uppercase tracking-[0.12em] text-paper sm:inline">
                   {profile.display_name ?? profile.username ?? 'Player'}
                 </span>
               </Link>
@@ -65,16 +56,13 @@ export function Header() {
                   await signOut()
                   navigate('/')
                 }}
-                className="hidden rounded-lg px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white sm:block"
+                className="hidden px-2 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-mute transition hover:text-paper sm:block"
               >
                 Sign out
               </button>
             </div>
           ) : (
-            <button
-              onClick={signInWithGitHub}
-              className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-slate-200"
-            >
+            <button onClick={signInWithGitHub} className="btn-ghost !py-2">
               <GithubIcon />
               Sign in
             </button>
@@ -82,17 +70,16 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile nav */}
-      <nav className="flex items-center gap-1 overflow-x-auto px-4 pb-2 sm:hidden">
+      <nav className="flex items-center gap-1 overflow-x-auto border-t border-line px-4 py-2 sm:hidden">
         <NavLink to="/" end className={linkClass}>
-          Home
+          Floor
         </NavLink>
         <NavLink to="/browse" className={linkClass}>
           Browse
         </NavLink>
         {profile && (
           <NavLink to="/dashboard" className={linkClass}>
-            Dashboard
+            Desk
           </NavLink>
         )}
         {profile && (
@@ -105,19 +92,29 @@ export function Header() {
   )
 }
 
-function Avatar({ profile }: { profile: { avatar_url: string | null; display_name: string | null; username: string | null } }) {
+function Avatar({
+  profile,
+}: {
+  profile: {
+    avatar_url: string | null
+    display_name: string | null
+    username: string | null
+  }
+}) {
   if (profile.avatar_url) {
     return (
       <img
         src={profile.avatar_url}
         alt=""
-        className="h-8 w-8 rounded-full object-cover"
+        className="h-7 w-7 object-cover"
       />
     )
   }
-  const initial = (profile.display_name ?? profile.username ?? 'P').charAt(0).toUpperCase()
+  const initial = (profile.display_name ?? profile.username ?? 'P')
+    .charAt(0)
+    .toUpperCase()
   return (
-    <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-purple-600 text-sm font-bold text-white">
+    <span className="grid h-7 w-7 place-items-center bg-ember font-display text-sm font-extrabold text-ink">
       {initial}
     </span>
   )
