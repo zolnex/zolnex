@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://zolnex.github.io/sitemap.xml
